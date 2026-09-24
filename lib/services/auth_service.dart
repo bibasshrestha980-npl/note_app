@@ -84,8 +84,12 @@ class AuthService {
         return 'This account has been disabled. Please contact support.';
       case 'too-many-requests':
         return 'Too many failed attempts. Please try again in a few minutes.';
-      case 'network-request-failed':
-        return 'Network error. Please check your internet connection.';
+      case 'invalid-api-key':
+        return 'Invalid API key: Please run "flutterfire configure --project=note-app-dcef2" or provide your real Firebase project keys.';
+      case 'configuration-not-found':
+        return 'Firebase configuration missing. Please run "flutterfire configure --project=note-app-dcef2".';
+      case 'operation-not-allowed':
+        return 'Email/Password sign-in is disabled in Firebase Console. Go to Authentication > Sign-in method and enable Email/Password.';
       default:
         return e.message ?? 'Authentication failed. Please try again.';
     }
