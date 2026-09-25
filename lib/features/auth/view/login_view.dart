@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'forgot_password_view.dart';
 import 'register_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -280,16 +281,25 @@ class _LoginViewState extends State<LoginView> {
                   ),
 
                   // Forgot Password Link
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
-                      // Handle forgot password
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordView(),
+                        ),
+                      );
                     },
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                    borderRadius: BorderRadius.circular(4),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -387,7 +397,7 @@ class _LoginViewState extends State<LoginView> {
                         color: Colors.grey.shade700,
                       ),
                     ),
-                    InkWell(
+                    GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -396,16 +406,12 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         );
                       },
-                      borderRadius: BorderRadius.circular(4),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                        child: Text(
-                          'Register',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                      child: const Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                     ),
