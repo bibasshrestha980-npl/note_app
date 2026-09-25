@@ -1,5 +1,7 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'register_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -16,7 +18,7 @@ class _LoginViewState extends State<LoginView> {
   bool _rememberMe = false;
   String _selectedLanguage = 'English';
 
-  final List<String> _languages = ['English', 'Nepali', 'Spanish', 'French'];
+  final List<String> _languages = ['English', 'Nepali'];
 
   @override
   void dispose() {
@@ -27,7 +29,9 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryYellow = Color(0xFFFFB800); // Warm golden yellow from the design
+    const primaryYellow = Color(
+      0xFFFFB800,
+    ); // Warm golden yellow from the design
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -67,10 +71,7 @@ class _LoginViewState extends State<LoginView> {
                         }
                       },
                       items: _languages.map((lang) {
-                        return DropdownMenuItem(
-                          value: lang,
-                          child: Text(lang),
-                        );
+                        return DropdownMenuItem(value: lang, child: Text(lang));
                       }).toList(),
                     ),
                   ),
@@ -301,10 +302,7 @@ class _LoginViewState extends State<LoginView> {
               Row(
                 children: [
                   Expanded(
-                    child: Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey.shade300, thickness: 1),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -317,10 +315,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   Expanded(
-                    child: Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey.shade300, thickness: 1),
                   ),
                 ],
               ),
@@ -394,7 +389,12 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Navigate to Register
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterView(),
+                          ),
+                        );
                       },
                       child: const Text(
                         'Register',
@@ -424,10 +424,7 @@ class GoogleLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(size, size),
-      painter: _GoogleLogoPainter(),
-    );
+    return CustomPaint(size: Size(size, size), painter: _GoogleLogoPainter());
   }
 }
 

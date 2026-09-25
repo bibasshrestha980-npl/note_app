@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'features/auth/view/login_view.dart';
 
 void main() {
@@ -10,13 +11,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Login',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: const LoginView(),
+      title: 'Note App',
+      home: LoginView(),
     );
   }
 }
