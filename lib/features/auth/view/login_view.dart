@@ -387,7 +387,7 @@ class _LoginViewState extends State<LoginView> {
                         color: Colors.grey.shade700,
                       ),
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -396,12 +396,16 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         );
                       },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                      borderRadius: BorderRadius.circular(4),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
