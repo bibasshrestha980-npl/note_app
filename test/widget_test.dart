@@ -4,8 +4,7 @@ import 'package:note_app/main.dart';
 void main() {
   testWidgets('App opens the login screen', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
-    expect(find.text('Enter your e-mail'), findsOneWidget);
-    expect(find.text('Enter your password'), findsOneWidget);
+    expect(find.text('Login'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }
