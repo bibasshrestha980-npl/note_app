@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/custom_snackbar.dart';
 import '../controller/auth_controller.dart';
 
 class ForgotPasswordView extends StatefulWidget {
@@ -27,13 +28,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   Future<void> _handleResetPassword() async {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email address'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackBar.showError(context, 'Please enter your email address');
       return;
     }
 
@@ -43,16 +38,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       await _authController.sendPasswordResetEmail(email);
       if (mounted) {
         setState(() => _emailSent = true);
+        CustomSnackBar.showSuccess(
+          context,
+          'Password reset link sent to your email!',
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        CustomSnackBar.showError(context, e.toString());
       }
     } finally {
       if (mounted) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../common/custom_snackbar.dart';
 import '../controller/auth_controller.dart';
 import 'login_view.dart';
 
@@ -42,60 +43,36 @@ class _RegisterViewState extends State<RegisterView> {
     final confirmPassword = _confirmPasswordController.text;
 
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your full name'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackBar.showError(context, 'Please enter your full name');
       return;
     }
 
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackBar.showError(context, 'Please enter your email');
       return;
     }
 
     if (password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a password'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackBar.showError(context, 'Please enter a password');
       return;
     }
 
     // Check if password and confirm password match
     if (password != confirmPassword) {
       setState(() {
-        _passwordError = 'Passwords must be the same';
+        _passwordError = 'Password and confirm password doesnot match';
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords must be the same'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
+      CustomSnackBar.showError(
+        context,
+        'Password and confirm password doesnot match',
       );
       return;
     }
 
     if (!_agreeToTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please agree to the Terms of Service & Privacy Policy'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
+      CustomSnackBar.showError(
+        context,
+        'Please agree to the Terms of Service & Privacy Policy',
       );
       return;
     }
@@ -112,24 +89,12 @@ class _RegisterViewState extends State<RegisterView> {
         name: name,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful!'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        CustomSnackBar.showSuccess(context, 'Registered successfully!');
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        CustomSnackBar.showError(context, e.toString());
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

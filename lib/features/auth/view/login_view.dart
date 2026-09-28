@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../common/custom_snackbar.dart';
 import '../controller/auth_controller.dart';
 import 'forgot_password_view.dart';
 import 'register_view.dart';
@@ -37,24 +38,12 @@ class _LoginViewState extends State<LoginView> {
     final password = _passwordController.text;
 
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackBar.showError(context, 'Please enter your email');
       return;
     }
 
     if (password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your password'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackBar.showError(context, 'Please enter your password');
       return;
     }
 
@@ -66,23 +55,11 @@ class _LoginViewState extends State<LoginView> {
         password: password,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful!'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        CustomSnackBar.showSuccess(context, 'Login successful!');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        CustomSnackBar.showError(context, e.toString());
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
