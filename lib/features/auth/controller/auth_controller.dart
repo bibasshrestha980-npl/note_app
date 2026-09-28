@@ -44,13 +44,11 @@ class AuthController {
         );
         return await _auth.signInWithCredential(credential);
       }
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
     } catch (e) {
       if (e.toString().contains('cancelled')) {
         throw 'Sign-in was cancelled';
       }
-      throw 'Google Sign-In failed: $e';
+      throw _handleAuthException(e);
     }
   }
 
@@ -64,10 +62,8 @@ class AuthController {
         email: email.trim(),
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
     } catch (e) {
-      throw 'An unexpected error occurred. Please try again.';
+      throw _handleAuthException(e);
     }
   }
 
@@ -88,10 +84,8 @@ class AuthController {
       }
 
       return credential;
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
     } catch (e) {
-      throw 'An unexpected error occurred. Please try again.';
+      throw _handleAuthException(e);
     }
   }
 
@@ -99,10 +93,8 @@ class AuthController {
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email.trim());
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
     } catch (e) {
-      throw 'An unexpected error occurred. Please try again.';
+      throw _handleAuthException(e);
     }
   }
 
@@ -112,33 +104,64 @@ class AuthController {
   }
 
   // Convert Firebase error codes into clean user-friendly messages
-  String _handleAuthException(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'popup-closed-by-user':
-        return 'Sign-in popup was closed before completing.';
-      case 'account-exists-with-different-credential':
-        return 'An account already exists with this email using a different sign-in method.';
-      case 'user-not-found':
-        return 'No account found with this email.';
-      case 'wrong-password':
-      case 'invalid-credential':
-        return 'Incorrect email or password. Please try again.';
-      case 'email-already-in-use':
-        return 'An account already exists with this email.';
-      case 'invalid-email':
-        return 'The email address is not valid.';
-      case 'weak-password':
-        return 'Password is too weak. Please use at least 6 characters.';
-      case 'operation-not-allowed':
-        return 'Email/Password sign-in is disabled in Firebase Console.';
-      case 'user-disabled':
-        return 'This account has been disabled.';
-      case 'too-many-requests':
-        return 'Too many attempts. Please try again later.';
-      case 'network-request-failed':
-        return 'Network error. Please check your internet connection.';
-      default:
-        return e.message ?? 'Authentication failed. Please try again.';
+  String _handleAuthException(dynamic e) {
+    String code = '';
+    String? message;
+    if (e is FirebaseAuthException) {
+      code = e.code;
+      message = e.message;
+    } else if (e is FirebaseException) {
+      code = e.code;
+      message = e.message;
     }
+    final rawString = e.toString();
+
+    if (code == 'popup-closed-by-user' ||
+        rawString.contains('popup-closed-by-user')) {
+      return 'Sign-in popup was closed before completing.';
+    }
+    if (code == 'account-exists-with-different-credential' ||
+        rawString.contains('account-exists-with-different-credential')) {
+      return 'An account already exists with this email using a different sign-in method.';
+    }
+    if (code == 'user-not-found' || rawString.contains('user-not-found')) {
+      return 'No account found with this email. Please register first.';
+    }
+    if (code == 'wrong-password' ||
+        rawString.contains('wrong-password') ||
+        code == 'invalid-credential' ||
+        rawString.contains('invalid-credential') ||
+        rawString.contains('INVALID_LOGIN_CREDENTIALS')) {
+      return 'Incorrect email or password. Please try again or register if you do not have an account.';
+    }
+    if (code == 'email-already-in-use' ||
+        rawString.contains('email-already-in-use')) {
+      return 'An account already exists with this email. Please log in.';
+    }
+    if (code == 'invalid-email' || rawString.contains('invalid-email')) {
+      return 'The email address is not valid.';
+    }
+    if (code == 'weak-password' || rawString.contains('weak-password')) {
+      return 'Password is too weak. Please use at least 6 characters.';
+    }
+    if (code == 'operation-not-allowed' ||
+        rawString.contains('operation-not-allowed')) {
+      return 'Email/Password sign-in is disabled in Firebase Console. Please enable it in Authentication -> Sign-in method.';
+    }
+    if (code == 'user-disabled' || rawString.contains('user-disabled')) {
+      return 'This account has been disabled.';
+    }
+    if (code == 'too-many-requests' ||
+        rawString.contains('too-many-requests')) {
+      return 'Too many attempts. Please try again later.';
+    }
+    if (code == 'network-request-failed' ||
+        rawString.contains('network-request-failed')) {
+      return 'Network error. Please check your internet connection.';
+    }
+    if (rawString.contains('no-app') || rawString.contains('FirebaseApp')) {
+      return 'Firebase is not initialized. Please refresh the browser (Ctrl+Shift+R).';
+    }
+    return message ?? (rawString.isNotEmpty ? rawString : 'Authentication failed. Please try again.');
   }
 }
