@@ -2,8 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../common/custom_snackbar.dart';
-import '../../home/view/home_view.dart';
 import '../controller/auth_controller.dart';
 import 'forgot_password_view.dart';
 import 'register_view.dart';
@@ -39,12 +37,24 @@ class _LoginViewState extends State<LoginView> {
     final password = _passwordController.text;
 
     if (email.isEmpty) {
-      CustomSnackBar.showError(context, 'Please enter your email');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
     if (password.isEmpty) {
-      CustomSnackBar.showError(context, 'Please enter your password');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your password'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
@@ -56,15 +66,23 @@ class _LoginViewState extends State<LoginView> {
         password: password,
       );
       if (mounted) {
-        CustomSnackBar.showSuccess(context, 'Login successful!');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login successful!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        CustomSnackBar.showError(context, e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -148,9 +166,9 @@ class _LoginViewState extends State<LoginView> {
 
               const SizedBox(height: 40),
 
-              // E-Mail Label & TextField
+              // Email Label & TextField
               const Text(
-                'E-Mail',
+                'Email',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -163,7 +181,7 @@ class _LoginViewState extends State<LoginView> {
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
                 decoration: InputDecoration(
-                  hintText: 'Enter your e-mail',
+                  hintText: 'Enter your email',
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade400,

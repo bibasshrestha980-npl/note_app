@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../common/custom_snackbar.dart';
-import '../../home/view/home_view.dart';
 import '../controller/auth_controller.dart';
 import 'login_view.dart';
 
@@ -44,36 +42,60 @@ class _RegisterViewState extends State<RegisterView> {
     final confirmPassword = _confirmPasswordController.text;
 
     if (name.isEmpty) {
-      CustomSnackBar.showError(context, 'Please enter your full name');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your full name'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
     if (email.isEmpty) {
-      CustomSnackBar.showError(context, 'Please enter your email');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
     if (password.isEmpty) {
-      CustomSnackBar.showError(context, 'Please enter a password');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a password'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
     // Check if password and confirm password match
     if (password != confirmPassword) {
       setState(() {
-        _passwordError = 'Password and confirm password doesnot match';
+        _passwordError = 'Passwords must be the same';
       });
-      CustomSnackBar.showError(
-        context,
-        'Password and confirm password doesnot match',
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords must be the same'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
       return;
     }
 
     if (!_agreeToTerms) {
-      CustomSnackBar.showError(
-        context,
-        'Please agree to the Terms of Service & Privacy Policy',
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please agree to the Terms of Service & Privacy Policy'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
       return;
     }
@@ -90,16 +112,24 @@ class _RegisterViewState extends State<RegisterView> {
         name: name,
       );
       if (mounted) {
-        CustomSnackBar.showSuccess(context, 'Registered successfully!');
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
-          (route) => false,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration successful!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
         );
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        CustomSnackBar.showError(context, e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -243,9 +273,9 @@ class _RegisterViewState extends State<RegisterView> {
 
               const SizedBox(height: 18),
 
-              // E-Mail Label & TextField
+              // Email Label & TextField
               const Text(
-                'E-Mail',
+                'Email',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -258,7 +288,7 @@ class _RegisterViewState extends State<RegisterView> {
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
                 decoration: InputDecoration(
-                  hintText: 'Enter your e-mail',
+                  hintText: 'Enter your email',
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade400,

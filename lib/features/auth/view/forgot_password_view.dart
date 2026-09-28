@@ -171,9 +171,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               const SizedBox(height: 36),
 
               if (!_emailSent) ...[
-                // E-Mail Label & TextField
+                // Email Label & TextField
                 const Text(
-                  'E-Mail',
+                  'Email',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -186,7 +186,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   keyboardType: TextInputType.emailAddress,
                   style: const TextStyle(fontSize: 14, color: Colors.black87),
                   decoration: InputDecoration(
-                    hintText: 'Enter your registered e-mail',
+                    hintText: 'Enter your registered email',
                     hintStyle: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade400,

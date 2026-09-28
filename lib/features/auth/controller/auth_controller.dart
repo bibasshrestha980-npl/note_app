@@ -4,10 +4,22 @@ class AuthController {
   FirebaseAuth get _auth => FirebaseAuth.instance;
 
   // Stream of user auth state changes
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<User?> get authStateChanges {
+    try {
+      return _auth.authStateChanges();
+    } catch (_) {
+      return const Stream.empty();
+    }
+  }
 
   // Currently logged in user
-  User? get currentUser => _auth.currentUser;
+  User? get currentUser {
+    try {
+      return _auth.currentUser;
+    } catch (_) {
+      return null;
+    }
+  }
 
   // Sign in with email and password
   Future<UserCredential> signIn({
