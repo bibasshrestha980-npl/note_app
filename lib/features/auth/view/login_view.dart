@@ -24,6 +24,7 @@ class _LoginViewState extends State<LoginView> {
   String _selectedLanguage = 'English';
   final AuthController _authController = AuthController();
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
 
   final List<String> _languages = ['English', 'Nepali'];
 
@@ -32,6 +33,27 @@ class _LoginViewState extends State<LoginView> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isGoogleLoading = true);
+
+    try {
+      await _authController.signInWithGoogle();
+      if (mounted) {
+        CustomSnackBar.showSuccess(context, 'Signed in with Google!');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeView()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomSnackBar.showError(context, e.toString());
+      }
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
+    }
   }
 
   Future<void> _handleLogin() async {
@@ -382,55 +404,40 @@ class _LoginViewState extends State<LoginView> {
 
               const SizedBox(height: 22),
 
-              // Social Login Buttons (Google & Apple)
-              Row(
-                children: [
-                  // Google Button
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {},
+              // Social Login Button (Google/Gmail only)
+              SizedBox(
+                height: 50,
+                child: OutlinedButton(
+                  onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: Colors.grey.shade300, width: 1),
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        child: const GoogleLogo(size: 22),
-                      ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  // Apple Button
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
+                  child: _isGoogleLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GoogleLogo(size: 22),
+                            SizedBox(width: 12),
+                            Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1E293B),
+                              ),
+                            ),
+                          ],
                         ),
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.apple,
-                          size: 26,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
 
               const SizedBox(height: 40),

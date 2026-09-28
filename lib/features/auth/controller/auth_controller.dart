@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController {
   FirebaseAuth get _auth => FirebaseAuth.instance;
@@ -18,6 +20,37 @@ class AuthController {
       return _auth.currentUser;
     } catch (_) {
       return null;
+    }
+  }
+
+  // Sign in with Google (Gmail)
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      if (kIsWeb) {
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('email');
+        return await _auth.signInWithPopup(googleProvider);
+      } else {
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        if (googleUser == null) {
+          throw 'Google sign-in was cancelled';
+        }
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        return await _auth.signInWithCredential(credential);
+      }
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      if (e.toString().contains('cancelled')) {
+        throw 'Sign-in was cancelled';
+      }
+      throw 'Google Sign-In failed: $e';
     }
   }
 
@@ -81,6 +114,10 @@ class AuthController {
   // Convert Firebase error codes into clean user-friendly messages
   String _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {
+      case 'popup-closed-by-user':
+        return 'Sign-in popup was closed before completing.';
+      case 'account-exists-with-different-credential':
+        return 'An account already exists with this email using a different sign-in method.';
       case 'user-not-found':
         return 'No account found with this email.';
       case 'wrong-password':
