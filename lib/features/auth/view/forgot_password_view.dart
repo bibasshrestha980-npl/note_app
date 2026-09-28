@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../controller/auth_controller.dart';
+
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
 
@@ -10,7 +12,9 @@ class ForgotPasswordView extends StatefulWidget {
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   final TextEditingController _emailController = TextEditingController();
   bool _emailSent = false;
+  bool _isLoading = false;
   String _selectedLanguage = 'English';
+  final AuthController _authController = AuthController();
 
   final List<String> _languages = ['English', 'Nepali', 'Spanish', 'French'];
 
@@ -20,19 +24,41 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     super.dispose();
   }
 
-  void _handleResetPassword() {
+  Future<void> _handleResetPassword() async {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please enter your email address'),
+          backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
       );
       return;
     }
 
-    setState(() => _emailSent = true);
+    setState(() => _isLoading = true);
+
+    try {
+      await _authController.sendPasswordResetEmail(email);
+      if (mounted) {
+        setState(() => _emailSent = true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -194,7 +220,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: _handleResetPassword,
+                    onPressed: _isLoading ? null : _handleResetPassword,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryYellow,
                       elevation: 0,
@@ -202,14 +228,23 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text(
-                      'Send Reset Link',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Send Reset Link',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ] else ...[

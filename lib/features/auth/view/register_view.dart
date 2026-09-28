@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../controller/auth_controller.dart';
 import 'login_view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -20,6 +21,8 @@ class _RegisterViewState extends State<RegisterView> {
   bool _agreeToTerms = false;
   String _selectedLanguage = 'English';
   String? _passwordError;
+  final AuthController _authController = AuthController();
+  bool _isLoading = false;
 
   final List<String> _languages = ['English', 'Nepali', 'Spanish', 'French'];
 
@@ -32,7 +35,7 @@ class _RegisterViewState extends State<RegisterView> {
     super.dispose();
   }
 
-  void _handleRegister() {
+  Future<void> _handleRegister() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -99,15 +102,38 @@ class _RegisterViewState extends State<RegisterView> {
 
     setState(() {
       _passwordError = null;
+      _isLoading = true;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Registration successful!'),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    try {
+      await _authController.signUp(
+        email: email,
+        password: password,
+        name: name,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration successful!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -516,7 +542,7 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: _handleRegister,
+                  onPressed: _isLoading ? null : _handleRegister,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryYellow,
                     elevation: 0,
@@ -524,14 +550,23 @@ class _RegisterViewState extends State<RegisterView> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
 
