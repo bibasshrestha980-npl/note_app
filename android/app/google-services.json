@@ -12,7 +12,12 @@
           "package_name": "com.example.note_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "699319563557-905v6too7d4rrj458usrk9n7m0fjn0cd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC1fWh9nBSMuUQ_l5UokG1rbeyokYKtBFg"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699319563557-905v6too7d4rrj458usrk9n7m0fjn0cd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "699319563557-pigm94ejrfg9lhe18mntdvgntb9ue2nk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.noteApp"
+              }
+            }
+          ]
         }
       }
     }

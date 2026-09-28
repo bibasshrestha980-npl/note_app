@@ -130,7 +130,7 @@ class AuthController {
       case 'weak-password':
         return 'Password is too weak. Please use at least 6 characters.';
       case 'operation-not-allowed':
-        return 'Sign-in method is disabled in Firebase Console. Please enable it in Authentication -> Sign-in method.';
+        return 'Email/Password sign-in is disabled in Firebase Console.';
       case 'user-disabled':
         return 'This account has been disabled.';
       case 'too-many-requests':
