@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+
 import 'forgot_password_view.dart';
 import 'register_view.dart';
 

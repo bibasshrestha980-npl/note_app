@@ -19,6 +19,7 @@ class _RegisterViewState extends State<RegisterView> {
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
   String _selectedLanguage = 'English';
+  String? _passwordError;
 
   final List<String> _languages = ['English', 'Nepali', 'Spanish', 'French'];
 
@@ -29,6 +30,84 @@ class _RegisterViewState extends State<RegisterView> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _handleRegister() {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your full name'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a password'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Check if password and confirm password match
+    if (password != confirmPassword) {
+      setState(() {
+        _passwordError = 'Passwords must be the same';
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords must be the same'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (!_agreeToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please agree to the Terms of Service & Privacy Policy'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _passwordError = null;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Registration successful!'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -227,6 +306,15 @@ class _RegisterViewState extends State<RegisterView> {
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
+                onChanged: (val) {
+                  if (_passwordError != null) {
+                    setState(() {
+                      if (val == _confirmPasswordController.text) {
+                        _passwordError = null;
+                      }
+                    });
+                  }
+                },
                 decoration: InputDecoration(
                   hintText: 'Enter your password',
                   hintStyle: TextStyle(
@@ -284,6 +372,17 @@ class _RegisterViewState extends State<RegisterView> {
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
+                onChanged: (val) {
+                  if (_passwordError != null) {
+                    setState(() {
+                      if (val == _passwordController.text) {
+                        _passwordError = null;
+                      } else {
+                        _passwordError = 'Passwords must be the same';
+                      }
+                    });
+                  }
+                },
                 decoration: InputDecoration(
                   hintText: 'Confirm your password',
                   hintStyle: TextStyle(
@@ -312,19 +411,41 @@ class _RegisterViewState extends State<RegisterView> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: Colors.grey.shade300,
-                      width: 1,
+                      color: _passwordError != null
+                          ? Colors.red
+                          : Colors.grey.shade300,
+                      width: _passwordError != null ? 1.5 : 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: primaryYellow,
+                    borderSide: BorderSide(
+                      color: _passwordError != null ? Colors.red : primaryYellow,
                       width: 1.5,
                     ),
                   ),
                 ),
               ),
+              if (_passwordError != null) ...[
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline, size: 14, color: Colors.red),
+                      const SizedBox(width: 4),
+                      Text(
+                        _passwordError!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
 
               const SizedBox(height: 16),
 
@@ -395,9 +516,7 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle register action
-                  },
+                  onPressed: _handleRegister,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryYellow,
                     elevation: 0,
