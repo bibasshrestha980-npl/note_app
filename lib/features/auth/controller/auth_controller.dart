@@ -1,9 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../firebase_options.dart';
+
 class AuthController {
   FirebaseAuth get _auth => FirebaseAuth.instance;
+
+  Future<void> _ensureInitialized() async {
+    if (Firebase.apps.isEmpty) {
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } catch (e) {
+        debugPrint('Firebase auto-init notice: $e');
+      }
+    }
+  }
 
   // Stream of user auth state changes
   Stream<User?> get authStateChanges {
@@ -25,6 +40,7 @@ class AuthController {
 
   // Sign in with Google (Gmail)
   Future<UserCredential> signInWithGoogle() async {
+    await _ensureInitialized();
     try {
       if (kIsWeb) {
         final GoogleAuthProvider googleProvider = GoogleAuthProvider();
@@ -57,6 +73,7 @@ class AuthController {
     required String email,
     required String password,
   }) async {
+    await _ensureInitialized();
     try {
       return await _auth.signInWithEmailAndPassword(
         email: email.trim(),
@@ -73,6 +90,7 @@ class AuthController {
     required String password,
     String? name,
   }) async {
+    await _ensureInitialized();
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
@@ -91,6 +109,7 @@ class AuthController {
 
   // Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
+    await _ensureInitialized();
     try {
       await _auth.sendPasswordResetEmail(email: email.trim());
     } catch (e) {
@@ -105,6 +124,7 @@ class AuthController {
 
   // Convert Firebase error codes into clean user-friendly messages
   String _handleAuthException(dynamic e) {
+    debugPrint('Auth error: $e');
     String code = '';
     String? message;
     if (e is FirebaseAuthException) {
