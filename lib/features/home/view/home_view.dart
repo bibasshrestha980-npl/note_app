@@ -84,7 +84,6 @@ class _HomeViewState extends State<HomeView> {
     final user = _authController.currentUser;
     final displayName =
         user?.displayName ?? user?.email?.split('@').first ?? 'User';
-    final email = user?.email ?? 'No email';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
@@ -92,26 +91,13 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         titleSpacing: 20,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hello, $displayName 👋',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
-              ),
-            ),
-            Text(
-              email,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade500,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ],
+        title: Text(
+          'Hello, $displayName 👋',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B),
+          ),
         ),
         actions: [
           IconButton(
