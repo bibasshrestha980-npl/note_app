@@ -223,17 +223,18 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     onPressed: _isLoading ? null : _handleResetPassword,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryYellow,
+                      disabledBackgroundColor: primaryYellow,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
+                        ? const Text(
+                            'Loading..',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           )
