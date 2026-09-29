@@ -33,8 +33,11 @@ A modern, responsive, and secure note-taking application built with **Flutter** 
 ```
 note_app/
 ├── android/                       # Android native project & Gradle config
-├── ios/                           # iOS native project
+├── ios/                           # iOS native project & Info.plist
+├── linux/                         # Linux desktop runner
+├── macos/                         # macOS desktop runner
 ├── web/                           # Web assets & index.html configuration
+├── windows/                       # Windows desktop runner
 ├── lib/
 │   ├── common/
 │   │   ├── common_colors.dart     # Brand theme & palette definitions
