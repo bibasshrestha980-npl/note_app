@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import '../../../common/common_colors.dart';
 import '../../../common/custom_snackbar.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../auth/view/login_view.dart';
-import '../controller/note_provider.dart';
-import '../model/note_model.dart';
-import 'widgets/add_note_dialog.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -25,24 +20,9 @@ class _HomeViewState extends State<HomeView> {
   final List<String> _categories = ['All Notes', 'Personal', 'Work', 'Ideas'];
 
   @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _openAddNoteDialog([NoteModel? note]) {
-    showDialog(
-      context: context,
-      builder: (context) => AddNoteDialog(noteToEdit: note),
-    );
   }
 
   Future<void> _handleLogout() async {
@@ -104,6 +84,7 @@ class _HomeViewState extends State<HomeView> {
     final user = _authController.currentUser;
     final displayName =
         user?.displayName ?? user?.email?.split('@').first ?? 'User';
+    final email = user?.email ?? 'No email';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
@@ -111,13 +92,26 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         titleSpacing: 20,
-        title: Text(
-          'Hello, $displayName 👋',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1E293B),
-          ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hello, $displayName 👋',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+            Text(
+              email,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade500,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -171,15 +165,6 @@ class _HomeViewState extends State<HomeView> {
                     color: Colors.grey.shade400,
                     size: 22,
                   ),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear, size: 18),
-                          onPressed: () {
-                            _searchController.clear();
-                            setState(() {});
-                          },
-                        )
-                      : null,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -237,188 +222,72 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 40),
 
-            // Notes Section with Consumer
-            Consumer<NoteProvider>(
-              builder: (context, noteProvider, child) {
-                final notes = noteProvider.filterNotes(
-                  category: _categories[_selectedCategoryIndex],
-                  query: _searchController.text.trim(),
-                );
-
-                if (notes.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              color: CommonColors.primaryColor
-                                  .withValues(alpha: 0.12),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.note_alt_outlined,
-                              size: 46,
-                              color: CommonColors.primaryColor,
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          const Text(
-                            'No notes yet',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E293B),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Create your first note by tapping the button below',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton.icon(
-                            onPressed: () => _openAddNoteDialog(),
-                            icon: const Icon(Icons.add,
-                                color: Colors.white, size: 20),
-                            label: const Text(
-                              'Create Note',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: CommonColors.primaryColor,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ],
+            // Empty State Illustration & Message
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: CommonColors.primaryColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.note_alt_outlined,
+                      size: 50,
+                      color: CommonColors.primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'No notes yet',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Create your first note by tapping the button below',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      CustomSnackBar.showInfo(
+                        context,
+                        'Note creation feature coming up next!',
+                      );
+                    },
+                    icon: const Icon(Icons.add, color: Colors.white, size: 20),
+                    label: const Text(
+                      'Create Note',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                  );
-                }
-
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: notes.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final note = notes[index];
-                    final dateStr =
-                        DateFormat('MMM dd, yyyy').format(note.createdAt);
-
-                    return Card(
-                      elevation: 0.5,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CommonColors.primaryColor,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: InkWell(
-                        onTap: () => _openAddNoteDialog(note),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      note.title,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E293B),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: CommonColors.primaryColor
-                                          .withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      note.category,
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: CommonColors.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.delete_outline,
-                                      size: 18,
-                                      color: Colors.red.shade400,
-                                    ),
-                                    tooltip: 'Delete Note',
-                                    onPressed: () {
-                                      noteProvider.deleteNote(note.id);
-                                      CustomSnackBar.showInfo(
-                                        context,
-                                        'Note deleted',
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                              if (note.content.isNotEmpty) ...[
-                                const SizedBox(height: 6),
-                                Text(
-                                  note.content,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey.shade600,
-                                    height: 1.4,
-                                  ),
-                                ),
-                              ],
-                              const SizedBox(height: 10),
-                              Text(
-                                dateStr,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -426,7 +295,12 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: CommonColors.primaryColor,
         elevation: 2,
-        onPressed: () => _openAddNoteDialog(),
+        onPressed: () {
+          CustomSnackBar.showInfo(
+            context,
+            'Note creation feature coming up next!',
+          );
+        },
         child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
     );
