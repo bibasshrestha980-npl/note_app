@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'features/auth/controller/auth_provider.dart';
 import 'features/auth/view/login_view.dart';
 import 'firebase_options.dart';
 
@@ -13,7 +15,13 @@ void main() async {
   } catch (e) {
     debugPrint('Firebase initialization notice: $e');
   }
-  runApp(const MyApp());
+
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => AuthProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
