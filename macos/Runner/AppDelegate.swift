@@ -1,3 +1,4 @@
+// Note App - macOS Desktop Application Delegate
 import Cocoa
 import FlutterMacOS
 

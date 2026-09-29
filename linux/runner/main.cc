@@ -1,3 +1,4 @@
+// Note App - Linux Desktop Application Runner
 #include "my_application.h"
 
 int main(int argc, char** argv) {
