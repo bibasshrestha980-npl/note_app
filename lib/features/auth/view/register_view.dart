@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../common/custom_snackbar.dart';
 import '../../home/view/home_view.dart';
 import '../controller/auth_controller.dart';
@@ -131,7 +132,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryYellow = Color(0xFFFFB800); // Warm golden yellow from login design
+    const primaryYellow = Color(
+      0xFFFFB800,
+    ); // Warm golden yellow from login design
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -423,8 +426,10 @@ class _RegisterViewState extends State<RegisterView> {
                       color: Colors.grey.shade600,
                     ),
                     onPressed: () {
-                      setState(() =>
-                          _obscureConfirmPassword = !_obscureConfirmPassword);
+                      setState(
+                        () =>
+                            _obscureConfirmPassword = !_obscureConfirmPassword,
+                      );
                     },
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -439,7 +444,9 @@ class _RegisterViewState extends State<RegisterView> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: _passwordError != null ? Colors.red : primaryYellow,
+                      color: _passwordError != null
+                          ? Colors.red
+                          : primaryYellow,
                       width: 1.5,
                     ),
                   ),
@@ -451,7 +458,11 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.only(left: 4),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline, size: 14, color: Colors.red),
+                      const Icon(
+                        Icons.error_outline,
+                        size: 14,
+                        color: Colors.red,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         _passwordError!,
@@ -569,10 +580,7 @@ class _RegisterViewState extends State<RegisterView> {
               Row(
                 children: [
                   Expanded(
-                    child: Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey.shade300, thickness: 1),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -585,10 +593,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                   ),
                   Expanded(
-                    child: Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey.shade300, thickness: 1),
                   ),
                 ],
               ),

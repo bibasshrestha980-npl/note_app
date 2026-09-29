@@ -258,8 +258,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.check_circle_rounded,
-                          color: Colors.green.shade700, size: 28),
+                      Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green.shade700,
+                        size: 28,
+                      ),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Text(
@@ -316,7 +319,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       onTap: () => Navigator.pop(context),
                       borderRadius: BorderRadius.circular(4),
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 6,
+                        ),
                         child: Text(
                           'Login',
                           style: TextStyle(

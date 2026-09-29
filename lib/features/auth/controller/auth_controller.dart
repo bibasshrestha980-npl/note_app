@@ -182,6 +182,9 @@ class AuthController {
     if (rawString.contains('no-app') || rawString.contains('FirebaseApp')) {
       return 'Firebase is not initialized. Please refresh the browser (Ctrl+Shift+R).';
     }
-    return message ?? (rawString.isNotEmpty ? rawString : 'Authentication failed. Please try again.');
+    return message ??
+        (rawString.isNotEmpty
+            ? rawString
+            : 'Authentication failed. Please try again.');
   }
 }

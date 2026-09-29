@@ -73,10 +73,7 @@ class _LoginViewState extends State<LoginView> {
     setState(() => _isLoading = true);
 
     try {
-      await _authController.signIn(
-        email: email,
-        password: password,
-      );
+      await _authController.signIn(email: email, password: password);
       if (mounted) {
         CustomSnackBar.showSuccess(context, 'Login successful!');
         Navigator.pushReplacement(

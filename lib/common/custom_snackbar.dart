@@ -37,9 +37,7 @@ class CustomSnackBar {
         backgroundColor: backgroundColor ?? CommonColors.primaryColor,
         behavior: SnackBarBehavior.floating,
         duration: duration,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         action: action,
       ),
